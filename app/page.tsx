@@ -2,7 +2,7 @@ import { sigmar } from "@/app/ui/fonts";
 import { mont } from "@/app/ui/fonts";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { TopBar } from "@/app/ui/topbar";
+import { TopBar } from "@/app/components/topbar";
 
 function ActionButtons() {
   return (

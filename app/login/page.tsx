@@ -1,6 +1,6 @@
 import LoginForm from '@/login/login-form';
 import { Suspense } from 'react';
-import { TopBar } from '@/app/ui/topbar';
+import { TopBar } from '@/app/components/topbar';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';

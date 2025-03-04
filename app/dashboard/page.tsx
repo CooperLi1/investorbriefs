@@ -1,7 +1,8 @@
-import { TopBar } from '@/app/ui/topbar';
+import { TopBar } from '@/app/components/topbar';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Metadata } from 'next';
+import { UserProfile } from '@/app/components/showlogin';
 
 export const metadata: Metadata = {
     title: 'Dashboard',
@@ -17,7 +18,6 @@ export default function PlaceholderPage() {
         <h1 className="text-4xl font-bold md:text-6xl">Coming Soon</h1>
         <p className="mt-4 text-lg md:text-xl opacity-80">We're working on it!</p>
       </div>
-
       {/* Back Button */}
       <Link
         href="/"

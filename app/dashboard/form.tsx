@@ -37,7 +37,7 @@ export function Form() {
       setResults(result); // Set the result after the data is fetched
     } catch (error) {
       console.error("Error fetching brief:", error);
-      setResults("Error occurred while fetching the brief.");
+      setResults("Error fetching brief:" + error);
     } finally {
       setIsLoading(false); // Stop loading after the request is done
     }

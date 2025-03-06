@@ -11,7 +11,7 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "auth": "^1.2.3",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
     "framer-motion": "^12.4.7",
     "next": "15.2.0",

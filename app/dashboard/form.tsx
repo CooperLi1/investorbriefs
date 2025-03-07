@@ -35,7 +35,11 @@ export function Form() {
 
     try {
       const result = await getBrief(ticker, description); // Wait for the promise to resolve
-      setResults(result); // Set the result after the data is fetched
+      if (result !== null) {
+        setResults(result); 
+      } else {
+        setResults("Something went wrong :("); 
+      }
     } catch (error) {
       console.error("Error fetching brief:", error);
       setResults("Error fetching brief:" + error);

@@ -7,6 +7,15 @@ import { TopBar } from "@/app/components/topbar";
 function ActionButtons() {
   return (
     <div className="mt-10 flex flex-col md:flex-row items-center gap-6">
+      {/* Sign up */}
+      <Link
+        href="/signup"
+        className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-4 text-sm font-medium text-white transition-all border border-white/50 md:text-base shadow-md 
+        hover:scale-105 hover:shadow-2xl hover:border-white hover:bg-blue-600"
+      >
+      <span>Sign up</span>
+        <ArrowRightIcon className="w-5 md:w-6" />
+      </Link>
       {/* Log in */}
       <Link
         href="/login"

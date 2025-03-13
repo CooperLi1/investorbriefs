@@ -4,6 +4,7 @@ import "./globals.css";
 import { sigmar } from '@/app/ui/fonts';
 import { mont } from '@/app/ui/fonts';
 import Logo from "@/app/ui/images/Logo";
+import AuthProvider from "@/app/components/sessionproviderwrapper";
 
 
 const geistSans = Geist({
@@ -63,10 +64,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${mont.className} antialiased`}
-      >
-        {children}
+      <body className={`${mont.className} antialiased`}>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

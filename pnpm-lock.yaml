@@ -29,6 +29,9 @@ importers:
       framer-motion:
         specifier: ^12.4.7
         version: 12.4.10(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      fs:
+        specifier: 0.0.1-security
+        version: 0.0.1-security
       newsapi:
         specifier: ^2.4.1
         version: 2.4.1
@@ -753,6 +756,9 @@ packages:
         optional: true
       react-dom:
         optional: true
+
+  fs@0.0.1-security:
+    resolution: {integrity: sha512-3XY9e1pP0CVEUCdj5BmfIZxRBTSDycnbqhIOGec9QYtmVH2fbLpj86CFWkrNOkt/Fvty4KZG5lTglL9j/gJ87w==}
 
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
@@ -2061,6 +2067,8 @@ snapshots:
     optionalDependencies:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
+
+  fs@0.0.1-security: {}
 
   function-bind@1.1.2: {}
 

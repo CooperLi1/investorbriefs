@@ -4,7 +4,7 @@ import "./globals.css";
 import { sigmar } from '@/app/ui/fonts';
 import { mont } from '@/app/ui/fonts';
 import Logo from "@/app/ui/images/Logo";
-import AuthProvider from "@/app/components/sessionproviderwrapper";
+import { ClerkProvider } from '@clerk/nextjs'
 
 
 const geistSans = Geist({
@@ -65,9 +65,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${mont.className} antialiased`}>
-        <AuthProvider>
+        <ClerkProvider>
           {children}
-        </AuthProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

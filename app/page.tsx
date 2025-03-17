@@ -1,30 +1,52 @@
-import { sigmar } from "@/app/ui/fonts";
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { mont } from "@/app/ui/fonts";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { TopBar } from "@/app/components/topbar";
+import { auth } from "@clerk/nextjs/server";
+
+async function LoginButton() {
+  const { userId } = await auth();
+
+  if (userId) {
+    return (
+      <Link
+        href="/dashboard"
+        className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-4 text-sm font-medium text-white transition-all border border-white/50 md:text-base shadow-md 
+        hover:scale-105 hover:shadow-2xl hover:border-white hover:bg-blue-600"
+      >
+        <span>Go to Dashboard</span>
+        <ArrowRightIcon className="w-5 md:w-6" />
+      </Link>
+    );
+  }
+
+  return (
+    <SignInButton mode="modal">
+      <button className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-4 text-sm font-medium text-white transition-all border border-white/50 md:text-base shadow-md 
+        hover:scale-105 hover:shadow-2xl hover:border-white hover:bg-blue-600">
+        <span>Log in</span>
+        <ArrowRightIcon className="w-5 md:w-6" />
+      </button>
+    </SignInButton>
+  );
+}
 
 function ActionButtons() {
   return (
     <div className="mt-10 flex flex-col md:flex-row items-center gap-6">
       {/* Sign up */}
-      <Link
-        href="/signup"
-        className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-4 text-sm font-medium text-white transition-all border border-white/50 md:text-base shadow-md 
-        hover:scale-105 hover:shadow-2xl hover:border-white hover:bg-blue-600"
-      >
-      <span>Sign up</span>
-        <ArrowRightIcon className="w-5 md:w-6" />
-      </Link>
-      {/* Log in */}
-      <Link
-        href="/login"
-        className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-4 text-sm font-medium text-white transition-all border border-white/50 md:text-base shadow-md 
-        hover:scale-105 hover:shadow-2xl hover:border-white hover:bg-blue-600"
-      >
-      <span>Log in</span>
-        <ArrowRightIcon className="w-5 md:w-6" />
-      </Link>
+      <SignUpButton mode="modal">
+        <button className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-4 text-sm font-medium text-white transition-all border border-white/50 md:text-base shadow-md 
+        hover:scale-105 hover:shadow-2xl hover:border-white hover:bg-blue-600">
+          <span>Sign up</span>
+          <ArrowRightIcon className="w-5 md:w-6" />
+        </button>
+      </SignUpButton>
+
+      {/* Log in */}  
+      <LoginButton/>
+
 
       {/* Learn More */}
       <Link

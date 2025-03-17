@@ -2,7 +2,7 @@ import Link from 'next/link';
 import NavLinks from '@/login/nav-links';
 import Logo from '@/app/ui/images/Logo';
 import { PowerIcon } from '@heroicons/react/24/outline';
-import { signOut } from '@/login/auth';
+import { signOut } from '@/auth';
 
 export default function SideNav() {
   return (

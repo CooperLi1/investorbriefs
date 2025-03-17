@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
-import GithubProvider from "next-auth/providers/github"
-export const authOptions = {
+import CredentialsProvider from "next-auth/providers/credentials"
+const handler = NextAuth({
   // Configure one or more authentication providers
   providers: [
     CredentialsProvider({
@@ -37,6 +37,6 @@ export const authOptions = {
         }
       })    
   ],
-}
-export default NextAuth(authOptions)
+})
 
+export { handler as GET, handler as POST }

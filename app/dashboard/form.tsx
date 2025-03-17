@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import { getBrief } from '@/pages/api/backendsetup'
+import { getBrief } from '@/app/api/backendsetup'
 import ReactMarkdown from 'react-markdown';
 
 export function Form() {

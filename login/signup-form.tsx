@@ -6,7 +6,7 @@ import { mont } from '@/app/ui/fonts';
 import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from '@/app/ui/button';
-import { signUp } from '@/login/auth';
+import { signUp } from '@/auth';
 import { useSearchParams } from 'next/navigation';
 
 export default function SignUp() {

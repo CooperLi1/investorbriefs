@@ -4,6 +4,9 @@ import { ClerkProvider } from "@clerk/nextjs";
 import DarkModeToggle from "@/app/components/darkmodetoggle";
 import { SideNav } from "../components/sidenav";
 import { useState, useEffect } from "react";
+import {motion, AnimatePresence} from 'framer-motion';
+import { usePathname } from 'next/navigation'
+
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false); // Sidebar state
@@ -34,6 +37,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     // Log to see if dark mode changes
     console.log("Dark Mode:", darkMode ? "Enabled" : "Disabled");
   }, [darkMode]); // Run when darkMode changes
+  const pathname = usePathname(); 
 
   return (
     <ClerkProvider>
@@ -51,11 +55,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           {/* Main Content */}
           <div
-            className={`flex-1 flex flex-col p-8 transition-all duration-300 ${
+            className={`flex-1 flex flex-col p-9 transition-all duration-300 ${
               isSidebarOpen ? 'hidden md:flex' : 'flex'
             }`}
           >
-            {children}
+          <div className="relative w-full h-full overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={pathname} // Triggers re-render when route changes
+                initial={{ opacity: 0, x: -20 }} // Start offscreen left
+                animate={{ opacity: 1, x: 0 }} // Animate into position
+                exit={{ opacity: 0, x: 20 }} // Exit smoothly
+                transition={{ duration: 0.5, ease: "easeInOut" }} // Smooth transition
+                className="absolute inset-0"
+              >
+                {children}
+              </motion.div>
+            </AnimatePresence>
+          </div>
           </div>
         </main>
 

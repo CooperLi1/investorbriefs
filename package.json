@@ -16,7 +16,7 @@
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
-    "framer-motion": "^12.4.7",
+    "framer-motion": "^12.5.0",
     "fs": "^0.0.1-security",
     "newsapi": "^2.4.1",
     "next": "15.2.0",

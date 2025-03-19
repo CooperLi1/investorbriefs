@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ArrowRightIcon, MagnifyingGlassIcon, PencilIcon } from "@heroicons/react/24/outline";
 import { getBrief } from '@/app/api/backendsetup'
 import ReactMarkdown from 'react-markdown';
@@ -41,7 +41,15 @@ export default function Form() {
     }
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log(event.key)
+    if (event.key === "Enter") {
+      handleSubmit();
+    }
+  };
+    
   return (
+    
     <div className="w-full px-4 pt-0">
       {/* Search Bar */}
       <div className="w-full flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-0">
@@ -56,6 +64,7 @@ export default function Form() {
             onChange={handleTickerChange} 
             className="inputfield"
             placeholder="Enter ticker..." 
+            onKeyDown={handleKeyDown}
           />
         </div>
 
@@ -69,6 +78,7 @@ export default function Form() {
             onChange={handleDescriptionChange}
             className="inputfield"
             placeholder="Give instructions for summary..."
+            onKeyDown={handleKeyDown}
           />
         </div>
 

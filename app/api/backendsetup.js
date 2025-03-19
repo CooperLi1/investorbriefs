@@ -81,7 +81,7 @@ export async function getBrief(ticker, guidelines) {
     const prompt = `Given the following news articles: ${JSON.stringify(newsArticles)} 
     and the following financial information: ${JSON.stringify(stockInfo)}, 
     give a summary of the stock and a rating out of 10 for investment potential. 
-    Have it follow these guidelines: ${guidelines}. Make it very readable.`;
+    Have it follow these guidelines: ${guidelines}. Make it very readable and use both the news and stock info heavily, link the news articles.`;
 
     const response = await chatGPT(prompt);
     return response;

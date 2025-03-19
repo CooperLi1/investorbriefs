@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { ArrowRightIcon, MagnifyingGlassIcon, PencilIcon } from "@heroicons/react/24/outline";
 import { getBrief } from '@/app/api/backendsetup'
 import ReactMarkdown from 'react-markdown';
+import CustomMarkdown from '@/app/components/markdown'
 
 export function Form() {
   const [ticker, setTicker] = useState("");
@@ -30,6 +31,7 @@ export function Form() {
 
     try {
       const result = await getBrief(ticker, description);
+      // {console.log(results)}
       setResults(result !== null ? result : "Something went wrong :(");
     } catch (error) {
       console.error("Error fetching brief:", error);
@@ -52,7 +54,7 @@ export function Form() {
             id="ticker" 
             value={ticker} 
             onChange={handleTickerChange} 
-            className="pl-12 p-3 text-xl rounded-full bg-white shadow-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:bg-white w-full transition-all duration-300 ease-in-out"
+            className="inputfield"
             placeholder="Enter ticker..." 
           />
         </div>
@@ -65,7 +67,7 @@ export function Form() {
             id="description"
             value={description}
             onChange={handleDescriptionChange}
-            className="pl-12 p-3 text-xl rounded-full bg-white shadow-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:bg-white w-full transition-all duration-300 ease-in-out"
+            className="inputfield"
             placeholder="Give instructions for summary..."
           />
         </div>
@@ -74,9 +76,7 @@ export function Form() {
         <div className="flex flex-col w-full sm:w-1/4">
           <button 
             onClick={handleSubmit}
-            className="flex items-center justify-center gap-2 p-3 text-xl rounded-full bg-white shadow-lg border border-gray-300 
-                      focus:ring-2 focus:ring-blue-500 focus:bg-white w-full transition-all duration-300 ease-in-out 
-                      hover:scale-110 hover:shadow-xl"
+            className="submitbutton"
           >
             Submit
             <ArrowRightIcon className="w-6 md:w-7" />
@@ -87,8 +87,8 @@ export function Form() {
 
       {/* Results Section */}
       <div className="w-full mt-6">
-        <div className="w-full h-[600px] sm:h-[600px] p-6 text-xl rounded-xl bg-white/70 backdrop-blur-sm shadow-lg border border-gray-300 overflow-y-auto transition-all duration-300 ease-in-out">
-          <ReactMarkdown>{results}</ReactMarkdown>
+        <div className="w-full h-[600px] sm:h-[600px] textbox">
+          <CustomMarkdown content={results}/>
         </div>
       </div>
     </div>

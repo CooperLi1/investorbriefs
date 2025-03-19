@@ -1,48 +1,45 @@
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Input Field */
-.input-field {
-  @apply pl-12 p-3 text-xl rounded-full bg-white shadow-lg border border-gray-300 
-         focus:ring-2 focus:ring-blue-500 focus:bg-white w-full transition-all duration-300 ease-in-out 
-         dark:bg-gray-800 dark:border-gray-600 dark:text-white;
-}
+@layer base {
+  /* Input field */
+  .inputfield {
+    @apply pl-12 p-3 text-xl text-gray-900 rounded-full bg-white shadow-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 w-full transition-all duration-300 ease-in-out;
 
-/* Input Icons */
-.input-icon {
-  @apply absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-500 dark:text-gray-300;
-}
+    /* Dark mode styling */
+    @apply dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-400;
+  }
 
-/* Primary Button */
-.button-primary {
-  @apply flex items-center justify-center gap-2 p-3 text-xl rounded-full bg-white shadow-lg border border-gray-300 
-         focus:ring-2 focus:ring-blue-500 focus:bg-white w-full transition-all duration-300 ease-in-out 
-         hover:scale-110 hover:shadow-xl dark:bg-gray-700 dark:border-gray-500;
-}
+  /* Submit button */
+  .submitbutton {
+    @apply flex items-center justify-center gap-2 p-3 text-xl rounded-full bg-white shadow-lg border border-gray-300 
+    focus:ring-2 focus:ring-blue-500 w-full 
+    hover:scale-110 hover:shadow-xl;
 
-/* Search Bar Container */
-.search-bar-container {
-  @apply w-full flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-0;
-}
+    /* Dark mode styling */
+    @apply dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-400;
+  }
 
-/* Search Bar Input Container */
-.search-bar-input-container {
-  @apply flex flex-col w-full sm:w-1/4 relative;
-}
+  /* Text box */
+  .textbox {
+    @apply p-6 text-xl rounded-xl bg-white/70 backdrop-blur-sm shadow-lg border border-gray-300 overflow-y-auto ;
 
-/* Description Input Container */
-.description-input-container {
-  @apply flex flex-col w-full sm:w-2/4 relative;
-}
+    /* Dark mode styling */
+    @apply dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:backdrop-blur-sm dark:shadow-xl;
+  }
+  
+  .circlebutton {
+    @apply flex items-center justify-center gap-1 p-2 text-xl rounded-full 
+                bg-white border border-gray-300 shadow-lg 
+                dark:bg-gray-800 dark:border-gray-600 dark:text-white 
+                focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out 
+                hover:scale-110 hover:shadow-xl dark:hover:bg-gray-700
+  }
 
-/* Submit Button Container */
-.submit-button-container {
-  @apply flex flex-col w-full sm:w-1/4;
-}
-
-/* Content Box */
-.content-box {
-  @apply w-full h-[600px] p-6 text-xl rounded-xl bg-white/70 backdrop-blur-sm shadow-lg border border-gray-300 
-         overflow-y-auto transition-all duration-300 ease-in-out dark:bg-gray-800 dark:border-gray-600;
+  .defaulttext {
+    @apply text-gray-900 dark:text-white
+  }
 }

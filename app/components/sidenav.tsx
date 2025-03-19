@@ -1,6 +1,8 @@
 'use client';
 import { SignOutButton } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+
 interface SideNavProps {
   isOpen: boolean;
   toggleSidebar: () => void;
@@ -29,28 +31,29 @@ export default function LogoutButton() {
     </li>
   );
 }
-
 export function SideNav({ isOpen, toggleSidebar }: SideNavProps) {
   return (
-    <div className="relative">
+    <div>
       {/* Menu Button */}
       <button
-        className="fixed top-4 left-4 z-50 flex flex-col space-y-1 p-2 bg-gray-50 rounded"
         onClick={toggleSidebar}
+        className="fixed top-2 left-2 z-50 flex items-center justify-center gap-1 p-2 text-xl rounded-full bg-white shadow-lg border border-gray-300
+                  focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-300 ease-in-out 
+                  hover:scale-110 hover:shadow-xl"
       >
-        <span className="block w-6 h-0.75 bg-gray-500 rounded"></span>
-        <span className="block w-6 h-0.75 bg-gray-500 rounded"></span>
-        <span className="block w-6 h-0.75 bg-gray-500 rounded"></span>
+        {!isOpen ? (
+          <Bars3Icon className="w-6 h-6 text-gray-900" />
+        ) : (
+          <XMarkIcon className="w-6 h-6 text-gray-900" />
+        )}
       </button>
 
       {/* Sidebar */}
-      <div
-        className={`fixed top-0 left-0 h-full w-64 bg-gray-900 text-white transform transition-transform ${
-          isOpen ? "translate-x-0" : "-translate-x-64"
-        }`}
-      >
-        <Bar />
-      </div>
+      {isOpen && (
+        <div className="fixed top-0 left-0 h-full w-64 bg-gray-900 text-white shadow-lg">
+          <Bar />
+        </div>
+      )}
     </div>
   );
 }
@@ -59,10 +62,10 @@ export function Bar() {
   const { user } = useUser();
 
   return (
-    <aside
-      id="separator-sidebar"
-      className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800"
-      aria-label="Sidebar">
+      <aside
+        id="separator-sidebar"
+        className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700"
+        aria-label="Sidebar">
         <ul className="space-y-2 font-medium pt-8">
           <li>
               <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">

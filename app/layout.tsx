@@ -5,6 +5,8 @@ import { sigmar } from '@/app/ui/fonts';
 import { mont } from '@/app/ui/fonts';
 import Logo from "@/app/ui/images/Logo";
 import { ClerkProvider } from '@clerk/nextjs'
+import DarkModeToggle from "@/app/components/darkmodetoggle";
+import "./globals.css";
 
 
 const geistSans = Geist({

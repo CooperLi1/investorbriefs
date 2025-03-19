@@ -1,14 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon, MagnifyingGlassIcon, PencilIcon } from "@heroicons/react/24/outline";
 import { getBrief } from '@/app/api/backendsetup'
 import ReactMarkdown from 'react-markdown';
 
 export function Form() {
   const [ticker, setTicker] = useState("");
   const [description, setDescription] = useState("");
-  const [results, setResults] = useState("Briefs show up here! Search Something!");
+  const [results, setResults] = useState("Try searching something!");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleTickerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,59 +20,53 @@ export function Form() {
   };
 
   const handleSubmit = async () => {
-    console.log("Form submitted with:", {
-      ticker,
-      description,
-    });
+    console.log("Form submitted with:", { ticker, description });
 
-    // Set loading state to true while waiting for the response
     setIsLoading(true);
-    setResults("Loading..."); // Show loading message
+    setResults("Loading...");
 
-    // Reset input fields
     setTicker("");
     setDescription("");
 
     try {
-      const result = await getBrief(ticker, description); // Wait for the promise to resolve
-      if (result !== null) {
-        setResults(result); 
-      } else {
-        setResults("Something went wrong :("); 
-      }
+      const result = await getBrief(ticker, description);
+      setResults(result !== null ? result : "Something went wrong :(");
     } catch (error) {
       console.error("Error fetching brief:", error);
       setResults("Error fetching brief:" + error);
     } finally {
-      setIsLoading(false); // Stop loading after the request is done
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="w-full max-w-6xl h-[600px] p-6 sm:p-16 bg-gradient-to-b from-sky-400 to-blue-500 border-8 border-gray-50 rounded-2xl overflow-hidden shadow-lg relative">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-6 sm:space-y-0 sm:space-x-8 w-full">
-
+    <div className="w-full px-4 pt-0">
+      {/* Search Bar */}
+      <div className="w-full flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-0">
+        
         {/* Ticker */}
-        <div className="flex flex-col w-full sm:w-1/3">
+        <div className="flex flex-col w-full sm:w-1/4 relative">
+          <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-500" />
           <input 
             type="text" 
             id="ticker" 
             value={ticker} 
             onChange={handleTickerChange} 
-            className="mt-2 p-4 text-xl border-2 border-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md hover:scale-105 hover:shadow-2xl hover:border-white hover:bg-blue-600"
+            className="pl-12 p-3 text-xl rounded-full bg-white shadow-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:bg-white w-full transition-all duration-300 ease-in-out"
             placeholder="Enter ticker..." 
           />
         </div>
 
         {/* Description */}
-        <div className="flex flex-col w-full sm:w-2/3">
+        <div className="flex flex-col w-full sm:w-2/4 relative">
+          <PencilIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-500" />
           <input
             type="text"
             id="description"
             value={description}
             onChange={handleDescriptionChange}
-            className="mt-2 p-4 text-lg border-2 border-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md hover:scale-105 hover:shadow-2xl hover:border-white hover:bg-blue-600"
-            placeholder="Enter brief guidelines (ex. simple)..."
+            className="pl-12 p-3 text-xl rounded-full bg-white shadow-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:bg-white w-full transition-all duration-300 ease-in-out"
+            placeholder="Give instructions for summary..."
           />
         </div>
 
@@ -80,18 +74,20 @@ export function Form() {
         <div className="flex flex-col w-full sm:w-1/4">
           <button 
             onClick={handleSubmit}
-            className="mt-2 p-4 text-xl border-2 border-gray-50 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 text-white flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-300 w-full shadow-md hover:scale-105 hover:shadow-2xl hover:border-white hover:bg-blue-600"
+            className="flex items-center justify-center gap-2 p-3 text-xl rounded-full bg-white shadow-lg border border-gray-300 
+                      focus:ring-2 focus:ring-blue-500 focus:bg-white w-full transition-all duration-300 ease-in-out 
+                      hover:scale-110 hover:shadow-xl"
           >
             Submit
-            <ArrowRightIcon className="w-5 md:w-6 ml-2" /> {/* Added margin-left to space the icon */}
+            <ArrowRightIcon className="w-6 md:w-7" />
           </button>
         </div>
-
+        
       </div>
 
-      {/* Results */}
-      <div className="mt-8">
-        <div className="w-full h-[350px] sm:h-[350px] p-4 text-xl border-2 border-gray-50 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white resize-none overflow-y-auto">
+      {/* Results Section */}
+      <div className="w-full mt-6">
+        <div className="w-full h-[600px] sm:h-[600px] p-6 text-xl rounded-xl bg-white/70 backdrop-blur-sm shadow-lg border border-gray-300 overflow-y-auto transition-all duration-300 ease-in-out">
           <ReactMarkdown>{results}</ReactMarkdown>
         </div>
       </div>

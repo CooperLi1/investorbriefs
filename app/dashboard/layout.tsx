@@ -51,7 +51,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           {/* Main Content */}
           <div
-            className={`flex-1 flex flex-col p-7 transition-all duration-300 ${
+            className={`flex-1 flex flex-col p-8 transition-all duration-300 ${
               isSidebarOpen ? 'hidden md:flex' : 'flex'
             }`}
           >

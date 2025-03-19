@@ -25,7 +25,7 @@
 
   /* Text box */
   .textbox {
-    @apply p-6 text-xl rounded-xl bg-white/70 backdrop-blur-sm shadow-lg border border-gray-300 overflow-y-auto ;
+    @apply p-6 text-xl rounded-xl bg-white backdrop-blur-sm shadow-lg border border-gray-300 overflow-y-auto ;
 
     /* Dark mode styling */
     @apply dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:backdrop-blur-sm dark:shadow-xl;

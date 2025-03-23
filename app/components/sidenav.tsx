@@ -58,7 +58,7 @@ export function SideNav({ isOpen, toggleSidebar }: SideNavProps) {
   );
 }
 
-const Search = () => {
+const Summary = () => {
   const pathname = usePathname(); // Get current route
   const router = useRouter(); // Handle navigation
 
@@ -87,7 +87,7 @@ const Search = () => {
             d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1 0 6 6a7.5 7.5 0 0 0 10.65 10.65z"
           />
         </svg>
-        <span className="ms-3">Search</span>
+        <span className="ms-3">Summary</span>
       </a>
     </li>
   );
@@ -149,7 +149,7 @@ export function Bar() {
                   <span className="ms-3">{user?.firstName || "Guest"}</span>
               </a>
           </li>
-          <Search/>
+          <Summary/>
           <Visualize/>
           <li>
               <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">

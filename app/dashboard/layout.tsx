@@ -1,7 +1,6 @@
 "use client";
 
 import { ClerkProvider } from "@clerk/nextjs";
-import DarkModeToggle from "@/app/components/darkmodetoggle";
 import { SideNav } from "../components/sidenav";
 import { useState, useEffect } from "react";
 import {motion, AnimatePresence} from 'framer-motion';
@@ -10,33 +9,6 @@ import { usePathname } from 'next/navigation'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false); // Sidebar state
-  const [darkMode, setDarkMode] = useState<boolean>(false); // Dark mode state
-
-  useEffect(() => {
-    // Check the saved theme in localStorage and set darkMode state
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      setDarkMode(savedTheme === "dark");
-    } else {
-      // Default to light mode if no theme is saved
-      setDarkMode(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    // Update the class on document element when darkMode changes
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-
-    // Save the theme preference to localStorage
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
-
-    // Log to see if dark mode changes
-    console.log("Dark Mode:", darkMode ? "Enabled" : "Disabled");
-  }, [darkMode]); // Run when darkMode changes
   const pathname = usePathname(); 
 
   return (
@@ -59,7 +31,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               isSidebarOpen ? 'hidden md:flex' : 'flex'
             }`}
           >
-          <div className="relative w-full h-full overflow-hidden">
+          <div className="relative w-full h-full">
             <AnimatePresence mode="wait">
               <motion.div
                 key={pathname} // Triggers re-render when route changes
@@ -77,7 +49,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </main>
 
         {/* Dark mode toggle button */}
-        <DarkModeToggle setDarkMode={setDarkMode} />
       </div>
     </ClerkProvider>
   );

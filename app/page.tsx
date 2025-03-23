@@ -10,23 +10,6 @@ import { useUser } from "@clerk/nextjs";
 import  VideoComponent from "@/app/components/video";
 
 export default function Home() {
-  const [darkMode, setDarkMode] = useState<boolean>(false);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      setDarkMode(savedTheme === "dark");
-    }
-  }, []);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
-  }, [darkMode]);
 
   return (
     <div className="relative h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
@@ -37,7 +20,6 @@ export default function Home() {
         <div className="flex flex-col items-start w-full max-w-xl gap-y-6">
           <Title />
           <ActionButtons />
-          <DarkModeToggle setDarkMode={setDarkMode} />
         </div>
 
         <div className="relative w-full max-w-7xl">

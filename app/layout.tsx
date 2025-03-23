@@ -1,76 +1,94 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { sigmar } from '@/app/ui/fonts';
-import { mont } from '@/app/ui/fonts';
-import Logo from "@/app/ui/images/Logo";
+'use client'
+
 import { ClerkProvider } from '@clerk/nextjs'
+import { mont } from '@/app/ui/fonts'
+import Head from 'next/head'
+import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import DarkModeToggle from "@/app/components/darkmodetoggle";
-import "./globals.css";
+import "./globals.css"
 
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+  // Define dynamic titles based on the current route
+  const getPageTitle = (path: string) => {
+    const titles: { [key: string]: string } = {
+      '/dashboard': 'Summary | InvestorBriefs',
+      '/dashboard/visualize': 'Visualize | InvestorBriefs',
+    }
+    return titles[path] || 'InvestorBriefs - AI-Powered Stock Summaries'
+  }
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
- 
-export const metadata: Metadata = {
-  title: {
-    template: '%s | InvestorBriefs',
-    default: 'InvestorBriefs',
-  },
-  description: 'Get real-time AI-generated stock insights to make smarter investments.',
+  const [title, setTitle] = useState(getPageTitle(pathname))
 
-  // Icons for the Browser Tab (Favicon)
-  icons: {
-    icon: '/favicon.ico', // Standard favicon (default)
-    shortcut: '/favicon-32x32.png', // Common shortcut icon
-    apple: '/apple-touch-icon.png', // Apple Touch Icon for mobile
-  },
+  useEffect(() => {
+    setTitle(getPageTitle(pathname))
+    document.title = getPageTitle(pathname)
+  }, [pathname])
 
-  // Open Graph Metadata (For Social Media Previews)
-  openGraph: {
-    title: 'InvestorBriefs - AI-Powered Stock Summaries',
-    description: 'Get real-time AI-generated stock insights to make smarter investments.',
-    url: 'https://investorbriefs.com',
-    siteName: 'InvestorBriefs',
-    images: [
-      {
-        url: '/og-image.png', // Open Graph preview image
-        width: 1200,
-        height: 630,
-        alt: 'InvestorBriefs - AI-Powered Stock Summaries',
-      },
-    ],
-    type: 'website',
-  },
+  const [darkMode, setDarkMode] = useState<boolean>(false); // Dark mode state
 
-  // Twitter Metadata (For Twitter Link Previews)
-  twitter: {
-    card: 'summary_large_image',
-    title: 'InvestorBriefs - AI-Powered Stock Summaries',
-    description: 'Get real-time AI-generated stock insights to make smarter investments.',
-    images: ['/og-image.png'],
-  },
-};
+  useEffect(() => {
+    // Check the saved theme in localStorage and set darkMode state
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setDarkMode(savedTheme === "dark");
+    } else {
+      // Default to light mode if no theme is saved
+      setDarkMode(false);
+    }
+  }, []);
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  useEffect(() => {
+    // Update the class on document element when darkMode changes
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+
+    // Save the theme preference to localStorage
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+
+    // Log to see if dark mode changes
+    console.log("Dark Mode:", darkMode ? "Enabled" : "Disabled");
+  }, [darkMode]); // Run when darkMode changes
+
   return (
     <html lang="en">
+          <Head>
+            {/* Dynamic Title */}
+            <title>{title}</title>
+            <meta name="description" content="Get real-time AI-generated stock insights to make smarter investments." />
+
+            {/* Favicon */}
+            <link rel="icon" href="/favicon.ico" />
+            <link rel="shortcut icon" href="/favicon-32x32.png" />
+            <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+            {/* Open Graph Metadata */}
+            <meta property="og:title" content={title} />
+            <meta property="og:description" content="Get real-time AI-generated stock insights to make smarter investments." />
+            <meta property="og:url" content="https://investorbriefs.vercel.app" />
+            <meta property="og:site_name" content="InvestorBriefs" />
+            <meta property="og:image" content="/og-image.png" />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+            <meta property="og:type" content="website" />
+
+            {/* Twitter Metadata */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content={title} />
+            <meta name="twitter:description" content="Get real-time AI-generated stock insights to make smarter investments." />
+            <meta name="twitter:image" content="/og-image.png" />
+          </Head>
       <body className={`${mont.className} antialiased`}>
         <ClerkProvider>
           {children}
+          <DarkModeToggle setDarkMode={setDarkMode} />
         </ClerkProvider>
       </body>
     </html>
-  );
+  )
 }

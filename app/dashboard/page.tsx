@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { ArrowRightIcon, MagnifyingGlassIcon, PencilIcon } from "@heroicons/react/24/outline";
-import { getBrief } from '@/app/api/backendsetup'
+import { getBrief } from '@/app/api/summary'
 import ReactMarkdown from 'react-markdown';
 import CustomMarkdown from '@/app/components/markdown'
 

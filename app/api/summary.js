@@ -154,6 +154,10 @@ ${newsArticles.map(a => `- **${a.title}**\n  ${a.description}\n  [Read more](${a
 - **Strategic Move:** Should investors buy, sell, hold, or wait for better entry points?  
 
 ---
+### **Guidelines**
+- Make absolutely sure you follow the users guidelines for the summary here: **${guidelines}** and adjust the **tone, information, formatting, and complexity accordingly** 
+
+---
 
 ### **Example Analysis (Adjust Based on Guidelines)**
 
@@ -187,12 +191,12 @@ ${newsArticles.map(a => `- **${a.title}**\n  ${a.description}\n  [Read more](${a
 
 Investors should balance NVIDIA’s strong fundamentals against sector volatility and recent technical trends.  
 
-**the example summary ends here**
+**the example summary ends here, dont include this**
 ---
 
 ### **Final Verdict:**  
 Ensure your summary is **structured, insightful, and integrates news articles** into the investment recommendation.  
-Follow these guidelines: **${guidelines}** and adjust the **tone, information, formatting, and complexity accordingly**.  
+Again follow these guidelines: **${guidelines}** and adjust the **tone, information, formatting, and complexity accordingly**.  
 `;
 
   console.time("GPT Response Time");

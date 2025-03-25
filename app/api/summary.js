@@ -187,9 +187,8 @@ ${newsArticles.map(a => `- **${a.title}**\n  ${a.description}\n  [Read more](${a
 
 Investors should balance NVIDIA’s strong fundamentals against sector volatility and recent technical trends.  
 
+**the example summary ends here**
 ---
-
-example ends here.
 
 ### **Final Verdict:**  
 Ensure your summary is **structured, insightful, and integrates news articles** into the investment recommendation.  

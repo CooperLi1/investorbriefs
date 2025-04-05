@@ -48,7 +48,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </main>
 
-        {/* Dark mode toggle button */}
       </div>
     </ClerkProvider>
   );

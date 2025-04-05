@@ -2,6 +2,7 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 dotenv.config();
+import yahooFinance from 'yahoo-finance2';
 const ALPHA_VANTAGE_API_KEY = process.env.ALPHAVANTAGE_API_KEY;
 
 type PriceVolumeData = { date: string; price: number; volume: number }[];
@@ -18,8 +19,8 @@ export default async function visualData(ticker: string): Promise<Record<string,
     "max": [],
   };
 
-  try {
-    // Fetch 1-day intraday data (5-minute intervals)
+  // Fetch 1-day intraday data (5-minute intervals)
+  try{
     const intradayResponse = await axios.get("https://www.alphavantage.co/query", {
       params: {
         function: "TIME_SERIES_INTRADAY",
@@ -31,58 +32,37 @@ export default async function visualData(ticker: string): Promise<Record<string,
 
     const intradayData = intradayResponse.data["Time Series (5min)"];
     if (!intradayData) throw new Error("No intraday data received");
-
-    sampleData["1d"] = Object.entries(intradayData).map(([timestamp, values]) => {
-      if (typeof values !== "object" || values === null) {
-        throw new Error(`Unexpected data format for timestamp: ${timestamp}`);
-      }
-    
-      const typedValues = values as Record<string, string>;
-    
-      return {
-        date: timestamp,
-        price: parseFloat(typedValues["4. close"]),
-        volume: parseInt(typedValues["5. volume"], 10),
-      };
-    });
-    
-    // Fetch historical daily data
-    const dailyResponse = await axios.get("https://www.alphavantage.co/query", {
-      params: {
-        function: "TIME_SERIES_DAILY",
-        symbol: ticker,
-        outputsize: "full",
-        apikey: ALPHA_VANTAGE_API_KEY,
-      },
-    });
-
-
-    const dailyData = dailyResponse.data["Time Series (Daily)"];
-    if (!dailyData) throw new Error("No daily data received");
-
-    // Convert daily data to array
-    const historicalData = Object.entries(dailyData).map(([date, values]) => {
-      const typedValues = values as { "4. close": string; "6. volume": string };
-      return {
-        date,
-        price: parseFloat(typedValues["4. close"]),
-        volume: parseInt(typedValues["6. volume"]),
-      };
-    });
-    
-    // Populate different time ranges
-    sampleData["5d"] = historicalData.slice(0, 5);
-    sampleData["1m"] = historicalData.slice(0, 22);
-    sampleData["6m"] = historicalData.slice(0, 132);
-    sampleData["ytd"] = historicalData.filter((d) => d.date.startsWith("2024"));
-    sampleData["1y"] = historicalData.slice(0, 252);
-    sampleData["5y"] = historicalData.slice(0, 252 * 5);
-    sampleData["max"] = historicalData; // Use all data
-
-    return sampleData;
-    console.log(sampleData)
-  } catch (error) {
+  }catch (error){
     console.error("Error fetching stock data:", error);
-    return sampleData; 
   }
+    
+  const results = await yahooFinance.search('AAPL');
+  // console.log(results)
+  const oneday: "1m" | "2m" | "5m" | "15m" | "30m" | "60m" | "90m" | "1h" | "1d" | "5d" | "1wk" | "1mo" | "3mo" = "1d";
+  const queryOptions = { period1: '1000-01-01', interval: oneday};
+  const daily = await yahooFinance.chart(ticker, queryOptions);
+  const quotes = daily.quotes
+  const historicalData : PriceVolumeData = [];
+  for (const day  of quotes){
+    const date = new Date(day.date);
+    const formattedDate = date.toISOString().slice(0, 16);
+    historicalData.push(
+      {
+        date: formattedDate,
+        price: Number(day.adjclose),
+        volume: Number(day.volume)
+      }
+    )
+  }
+  
+// Populate different time ranges
+  sampleData["5d"] = historicalData.slice(-5);
+  sampleData["1m"] = historicalData.slice(-31);
+  sampleData["6m"] = historicalData.slice(-182);
+  sampleData["ytd"] = historicalData.filter((d) => d.date.startsWith("2025"));
+  sampleData["1y"] = historicalData.slice(-365);
+  sampleData["5y"] = historicalData.slice(-365 * 5);
+  sampleData["max"] = historicalData; // Use all data
+
+  return sampleData;
 }

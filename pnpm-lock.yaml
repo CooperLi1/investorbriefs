@@ -80,6 +80,9 @@ importers:
       remark-gfm:
         specifier: ^4.0.1
         version: 4.0.1
+      yfinance:
+        specifier: ^0.0.6
+        version: 0.0.6
       zod:
         specifier: ^3.24.2
         version: 3.24.2
@@ -1866,6 +1869,9 @@ packages:
   wrap-ansi@6.2.0:
     resolution: {integrity: sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==}
     engines: {node: '>=8'}
+
+  yfinance@0.0.6:
+    resolution: {integrity: sha512-EcJrrcX+ZCpbhouGO6s5y7XRUHGBwFY19PKtUJ17vg1L0dSK2N59Ns0A/ZfLtpWC8WatWjen6gE+KW51bxthsA==}
 
   yoctocolors-cjs@2.1.2:
     resolution: {integrity: sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==}
@@ -3841,6 +3847,8 @@ snapshots:
       ansi-styles: 4.3.0
       string-width: 4.2.3
       strip-ansi: 6.0.1
+
+  yfinance@0.0.6: {}
 
   yoctocolors-cjs@2.1.2: {}
 

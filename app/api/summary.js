@@ -47,6 +47,18 @@ async function getSentiment(query, numArticles = 5) {
 }
 
 // Get Stock Information
+
+async function validateTicker(ticker) {
+  const response = await axios.get('https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${query}&apikey=${API_KEY}');
+  const data = response.data;
+
+  if (data.bestMatches && data.bestMatches.length > 0) {
+    return NextResponse.json({ valid: true, matches: data.bestMatches });
+  } else {
+    return NextResponse.json({ valid: false, matches: [] });
+  }
+}
+
 async function getStockInfo(ticker) {
   try {
     console.time(`Stock API (${ticker})`); // Start timing

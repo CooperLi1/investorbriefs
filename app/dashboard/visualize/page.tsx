@@ -29,8 +29,8 @@ const timeRanges = ["1d", "5d", "1m", "6m", "ytd", "1y", "5y", "max"];
 export default function StockPage() {
   const [ticker, setTicker] = useState("");
   const [selectedStock, setSelectedStock] = useState<string | null>(null);
-  const [chartType, setChartType] = useState("");
-  const [timeRange, setTimeRange] = useState("max");
+  const [chartType, setChartType] = useState("line");
+  const [timeRange, setTimeRange] = useState("1d");
   const [errors, setErrors] = useState({ chartType: false, timeRange: false });
   const [loading, setLoading] = useState('Enter Data...')
 
@@ -78,11 +78,15 @@ export default function StockPage() {
         </div>
         <div className="flex flex-col w-full sm:w-1/4 relative">
           <ChartBarIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-500" />
-          <select value={chartType} onChange={(e) => setChartType(e.target.value)} className="inputfield">
-            <option value="">Select Chart Type</option>
-            {Object.entries(chartTypes).map(([key, label]) => (<option key={key} value={key}>{label}</option>))}
+          <select 
+            value={chartType} 
+            onChange={(e) => setChartType(e.target.value)} 
+            className="inputfield"
+          >
+            {Object.entries(chartTypes).map(([key, label]) => (
+              <option key={key} value={key}>{label}</option>
+            ))}
           </select>
-          {errors.chartType && (<p className="absolute left-2 top-full mt-1 text-sm text-red-500">Please select a chart type</p>)}
         </div>
         <div className="flex flex-col w-full sm:w-1/4 relative">
           <ClockIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-500" />
@@ -104,27 +108,27 @@ export default function StockPage() {
             <LineChart data={stockData} margin={{ top: 20, right: 30, left: 20, bottom: 30 }}>
               <XAxis 
                 dataKey="date" 
-                tickFormatter={(tick) => timeRange === "1d" ? tick.slice(11, 16) : tick.slice(5)} 
-                tickCount={30}
-              />
+                tickFormatter={(tick) => timeRange === "1d" ? tick.slice(11, 16) : tick.slice(5, 10)} 
+                interval={Math.floor(stockData.length / 10)} // Shows every 10th tick
+                />
               <YAxis 
                 domain={['dataMin', 'dataMax']} 
                 tickFormatter={(value) => Number(value).toFixed(1)}
               />
               <Tooltip formatter={(value) => Number(value).toFixed(1)} />
               <CartesianGrid strokeDasharray="3 3" />
-              <Line type="monotone" dataKey="price" stroke="#8884d8" strokeWidth={2} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="price" stroke="#8884d8" strokeWidth={2} activeDot={{ r: 6 }} />
             </LineChart>
           ) : chartType === "bar" ? (
             <BarChart data={stockData} margin={{ top: 20, right: 30, left: 20, bottom: 30 }}>
               <XAxis dataKey="date" 
-              tickFormatter={(tick) => timeRange === "1d" ? tick.slice(11, 16) : tick.slice(5)} 
-              tickCount={30}
+              tickFormatter={(tick) => timeRange === "1d" ? tick.slice(11, 16) : tick.slice(5, 10)} 
+              interval={Math.floor(stockData.length / 10)} // Shows every 10th tick
               />
               <YAxis 
                 domain={[0, 'auto']} 
-                tickFormatter={(value) => Number(value).toFixed(1)}
-              />
+                tickFormatter={(value) => value.toExponential(1)}  // Convert to scientific notation with 1 decimal place
+                />
               <Tooltip formatter={(value) => Number(value).toFixed(1)} />
               <CartesianGrid strokeDasharray="3 3" />
               <Bar dataKey="volume" fill="#82ca9d" barSize={30} />
@@ -132,8 +136,9 @@ export default function StockPage() {
           ) : chartType === "area" ? (
             <AreaChart data={stockData} margin={{ top: 20, right: 30, left: 20, bottom: 30 }}>
               <XAxis dataKey="date" 
-              tickFormatter={(tick) => timeRange === "1d" ? tick.slice(11, 16) : tick.slice(5)}      
-              tickCount={30}/>
+              tickFormatter={(tick) => timeRange === "1d" ? tick.slice(11, 16) : tick.slice(5, 10)}      
+              interval={Math.floor(stockData.length / 10)}
+              />
               <YAxis 
                 domain={['dataMin', 'dataMax']} 
                 tickFormatter={(value) => Number(value).toFixed(1)} 

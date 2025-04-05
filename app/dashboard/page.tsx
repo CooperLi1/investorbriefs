@@ -12,6 +12,7 @@ export default function Form() {
   const [results, setResults] = useState("Try searching something!");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  
   const handleTickerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTicker(event.target.value);
   };

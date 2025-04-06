@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import CustomMarkdown from '@/app/components/markdown'
 import checkTickerValidity from '@/app/api/visualize';
 
+
 export default function Form() {
   const [ticker, setTicker] = useState("");
   const [description, setDescription] = useState("");
@@ -79,7 +80,7 @@ export default function Form() {
             value={description}
             onChange={handleDescriptionChange}
             className="inputfield"
-            placeholder="Give instructions for summary..."
+            placeholder="Give instructions for summary (simple, complex, etc)..."
             onKeyDown={handleKeyDown}
           />
         </div>

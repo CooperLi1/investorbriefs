@@ -83,7 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <meta name="twitter:description" content="Get real-time AI-generated stock insights to make smarter investments." />
             <meta name="twitter:image" content="/og-image.png" />
           </Head>
-      <body className={`${mont.className} antialiased`}>
+      <body className={`${mont.className } antialiased bg-gray-50 dark:bg-gray-900`}>
         <ClerkProvider>
           {children}
           <DarkModeToggle setDarkMode={setDarkMode} />

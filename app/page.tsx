@@ -12,7 +12,7 @@ import  VideoComponent from "@/app/components/video";
 export default function Home() {
 
   return (
-    <div className="relative h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+    <div className="relative h-screen flex flex-col">
       <TopBar />
 
       {/* Main Content */}

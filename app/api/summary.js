@@ -9,7 +9,7 @@ const alphavantagekey = process.env.ALPHAVANTAGE_API_KEY;
 const sortBy = ["popularity", "relevancy", "publishedAt"];
 
 // Get Sentiment (News Articles)
-async function getSentiment(query, numArticles = 5) {
+export async function getSentiment(query, numArticles = 5) {
   try {
     console.time(`News API (${query})`); // Start timing
 
@@ -88,7 +88,7 @@ async function getSentiment(query, numArticles = 5) {
 //     return null;
 //   }
 // }
-async function getStockInfo(ticker) {
+export async function getStockInfo(ticker) {
   try {
     console.time(`Stock API (${ticker})`);
 
@@ -153,6 +153,7 @@ async function chatGPT(prompt) {
     throw error;
   }
 }
+
 export async function getBrief(ticker, guidelines) {
   console.time("getBrief Execution Time");
 
@@ -261,3 +262,49 @@ Again follow these guidelines: **${guidelines}** and adjust the **tone, informat
   return fullResponse; // Ensure this is a string
 }
 
+export async function compareGPT(names, guidelines, overviews){
+  const prompt = `compare the following stocks: ${names} using the following data: ${overviews}. 
+  When doing so, make sure to follow the users guidelines for how to compare the stocks: ${guidelines}. 
+  If they don't have any, compare in the style you think makes the most sense.
+  Address positives and negatives of investing in each of the stocks and which stocks you think are the best to invest in.
+  Use a **concise, readable format with multiple headers and sections** and explain how it should impact a user's investment strategy.
+  `
+  const stream = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo", // Use "gpt-3.5-turbo" for lower cost if needed
+    messages: [{ role: "user", content: prompt }],
+    stream: true, // Enables streaming
+  });
+
+  let fullResponse = "";
+  for await (const chunk of stream) {
+    fullResponse += chunk.choices[0]?.delta?.content || "";
+  }
+
+  return fullResponse; // Ensure this is a string
+}
+export async function superGPT(pastConvo, data, question) {
+  const prompt = 
+  `You are an investment advisor chatbot. 
+  Your job is to synthesize information from your knowledge base,
+  the conversation so far and data provided to you to answer questions.
+  First, this has been the conversation so far. Make sure to keep it in mind: ${pastConvo}.
+  Second, this is the data you have been given: ${data}
+  Finally, this is the question you have been asked :${question}
+  Answer it as best you can, and keep it simple and straight to the point. Don't hallucinate, be kind.
+  `
+
+  console.time("GPT Response Time");
+
+  const stream = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo", // Use "gpt-3.5-turbo" for lower cost if needed
+    messages: [{ role: "user", content: prompt }],
+    stream: true, // Enables streaming
+  });
+
+  let fullResponse = "";
+  for await (const chunk of stream) {
+    fullResponse += chunk.choices[0]?.delta?.content || "";
+  }
+
+  return fullResponse; 
+}

@@ -72,7 +72,7 @@ export default function StockPage() {
   const stockData = sampleData[timeRange as keyof typeof sampleData];
 
   return (
-    <div className="w-full px-4 pt-0">
+    <div className="w-full px-4 pt-0 ">
       {/* UI Controls */}
       <div className="w-full flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-0">
         <div className="flex flex-col w-full sm:w-1/4 relative">

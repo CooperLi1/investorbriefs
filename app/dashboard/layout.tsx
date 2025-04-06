@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <ClerkProvider>
-      <div className="min-h-screen transition-all bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white">
+      <div className="min-h-screen transition-all text-gray-900 dark:text-white">
         <main className="flex min-h-screen">
           {/* Sidebar */}
           <div

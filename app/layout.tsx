@@ -16,6 +16,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     const titles: { [key: string]: string } = {
       '/dashboard': 'Summary | InvestorBriefs',
       '/dashboard/visualize': 'Visualize | InvestorBriefs',
+      '/dashboard/compare': 'Compare | InvestorBriefs',
+      '/dashboard/chat': 'Chat | InvestorBriefs'
     }
     return titles[path] || 'InvestorBriefs - AI-Powered Stock Summaries'
   }

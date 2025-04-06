@@ -25,9 +25,9 @@ export default function Home() {
         <div className="relative w-full max-w-7xl">
           <iframe
             className="w-full h-[500px] rounded-xl shadow-xl border-none"
-            src="https://www.youtube.com/embed/5BV2vOFly0M?autoplay=1&loop=1&playlist=5BV2vOFly0M&mute=1&controls=0&modestbranding=1&showinfo=0&disablekb=1&fs=0&rel=0&iv_load_policy=3"
+            src="https://www.youtube.com/embed/Fxuv3Z0Ggsw?autoplay=1&loop=1&playlist=Fxuv3Z0Ggsw&mute=1&controls=1&modestbranding=1&showinfo=0&disablekb=1&fs=0&rel=0&iv_load_policy=3"
             title="YouTube video player"
-            allow="autoplay; encrypted-media; picture-in-picture"
+            allow="picture-in-picture"
             allowFullScreen
           />
          {/* <div className="absolute top-0 left-0 w-full h-[10%] defaultbg"></div>

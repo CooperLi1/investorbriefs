@@ -2,6 +2,7 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 dotenv.config();
+import yahooFinance from 'yahoo-finance2';
 
 const newsapikey = process.env.NEWS_API_KEY;
 const alphavantagekey = process.env.ALPHAVANTAGE_API_KEY;
@@ -47,50 +48,79 @@ async function getSentiment(query, numArticles = 5) {
 }
 
 // Get Stock Information
+// async function getStockInfo(ticker) {
+//   try {
+//     console.time(`Stock API (${ticker})`); // Start timing
 
-async function validateTicker(ticker) {
-  const response = await axios.get('https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${query}&apikey=${API_KEY}');
-  const data = response.data;
+//     const response = await axios.get('https://www.alphavantage.co/query', {
+//       params: {
+//         function: 'OVERVIEW',
+//         symbol: ticker,
+//         apikey: alphavantagekey,
+//       },
+//     });
 
-  if (data.bestMatches && data.bestMatches.length > 0) {
-    return NextResponse.json({ valid: true, matches: data.bestMatches });
-  } else {
-    return NextResponse.json({ valid: false, matches: [] });
-  }
-}
+//     console.timeEnd(`Stock API (${ticker})`); // End timing
 
+//     const data = response.data;
+
+//     if (!data || Object.keys(data).length === 0) {
+//       throw new Error('Invalid ticker or API limit reached.');
+//     }
+
+//     // Extract relevant fields
+//     const cleanedData = {
+//       name: data.Name,
+//       symbol: data.Symbol,
+//       sector: data.Sector,
+//       industry: data.Industry,
+//       marketCap: data.MarketCapitalization,
+//       peRatio: data.PERatio,
+//       dividendYield: data.DividendYield,
+//       profitMargin: data.ProfitMargin,
+//       returnOnEquity: data.ReturnOnEquityTTM,
+//       description: data.Description,
+//     };
+
+//     return cleanedData;
+//   } catch (error) {
+//     console.error('Error fetching stock overview:', error.message);
+//     return null;
+//   }
+// }
 async function getStockInfo(ticker) {
   try {
-    console.time(`Stock API (${ticker})`); // Start timing
+    console.time(`Stock API (${ticker})`);
 
-    const response = await axios.get('https://www.alphavantage.co/query', {
-      params: {
-        function: 'OVERVIEW',
-        symbol: ticker,
-        apikey: alphavantagekey,
-      },
+    const quoteSummary = await yahooFinance.quoteSummary(ticker, {
+      modules: ['assetProfile', 'summaryDetail', 'price', 'defaultKeyStatistics', 'financialData'],
     });
 
-    console.timeEnd(`Stock API (${ticker})`); // End timing
+    console.timeEnd(`Stock API (${ticker})`);
 
-    const data = response.data;
+    const {
+      price,
+      assetProfile,
+      summaryDetail,
+      defaultKeyStatistics,
+      financialData,
+    } = quoteSummary;
 
-    if (!data || Object.keys(data).length === 0) {
-      throw new Error('Invalid ticker or API limit reached.');
-    }
-
-    // Extract relevant fields
     const cleanedData = {
-      name: data.Name,
-      symbol: data.Symbol,
-      sector: data.Sector,
-      industry: data.Industry,
-      marketCap: data.MarketCapitalization,
-      peRatio: data.PERatio,
-      dividendYield: data.DividendYield,
-      profitMargin: data.ProfitMargin,
-      returnOnEquity: data.ReturnOnEquityTTM,
-      description: data.Description,
+      name: price?.longName || '',
+      symbol: price?.symbol || '',
+      sector: assetProfile?.sector || '',
+      industry: assetProfile?.industry || '',
+      // Try price.marketCap first, then defaultKeyStatistics.marketCap
+      marketCap:
+        price?.marketCap?.toString() ||
+        defaultKeyStatistics?.marketCap?.toString() ||
+        'N/A',
+      peRatio: summaryDetail?.trailingPE || 0,
+      dividendYield: summaryDetail?.dividendYield || 0,
+      profitMargin: financialData?.profitMargins || 0,
+      returnOnEquity: financialData?.returnOnEquity || 0,
+      description: assetProfile?.longBusinessSummary || '',
     };
 
     return cleanedData;

@@ -66,3 +66,14 @@ export default async function visualData(ticker: string): Promise<Record<string,
 
   return sampleData;
 }
+
+export async function checkTickerValidity(ticker: string){
+  console.log('hi')
+  try {
+    await yahooFinance.search(ticker);
+    return true;
+  } catch (error) {
+    console.error(`Error fetching data for ticker ${ticker}:`);
+    return false;
+  }
+}

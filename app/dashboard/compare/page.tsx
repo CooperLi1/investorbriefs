@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { MagnifyingGlassIcon, XMarkIcon, ArrowRightIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import visualData from '@/app/api/visualize';
+import checkTickerValidity from '@/app/api/visualize';
 import { Legend } from 'recharts';
 
 
@@ -14,9 +15,8 @@ export default function Page() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [timeRange, setTimeRange] = useState("1d");
-  const [errors, setErrors] = useState({ timeRange: false });
   const [stockData, setStockData] = useState<Record<string, Record<string, PriceVolumeData>>>({});
-  const [loading, setLoading] = useState('Enter Data...');
+  const [loading, setLoading] = useState('');
 
   async function fetchData(ticker: string) {
     setLoading('Loading...');
@@ -25,29 +25,34 @@ export default function Page() {
     } catch (error) {
       setLoading("Error fetching data:" + error);
     } finally {
-      setLoading('done');
+      setLoading('Loaded!');
     }
   }
 
-  const handleSearch = async () => {
-    if (searchTerm.trim() && !searchHistory.includes(searchTerm)) {
-      const trimmedSearchTerm = searchTerm.trim().toUpperCase();
-      setSearchHistory([...searchHistory, trimmedSearchTerm]);
+  const handleSearch = async () => {   
 
-      const fetchedData = await fetchData(trimmedSearchTerm);
-      if (fetchedData) {
-        setStockData(prev => ({
-          ...prev,
-          [trimmedSearchTerm] : fetchedData
-        }));
-      }
-      console.log('Updated stockData:', stockData); // Log stockData after updating
-      setSearchTerm('');
+    if (searchTerm.trim() && !searchHistory.includes(searchTerm.trim().toUpperCase())) {
+      const trimmedSearchTerm = searchTerm.trim().toUpperCase();
+
+      checkTickerValidity(trimmedSearchTerm).then(async valid => {  
+        setSearchHistory([...searchHistory, trimmedSearchTerm]);
+
+        const fetchedData = await fetchData(trimmedSearchTerm);
+        if (fetchedData) {
+          setStockData(prev => ({
+            ...prev,
+            [trimmedSearchTerm]: fetchedData
+          }));
+        }
+        setSearchTerm('');
+      }).catch(error => {
+        setLoading('Invalid Ticker :(');
+      });
+
     }
 
-    setErrors({ timeRange: !timeRange });
   };
-
+  
   const removeTicker = (tickerToRemove: string) => {
     setStockData((prevData) => {
       const { [tickerToRemove]: _, ...rest } = prevData;
@@ -116,8 +121,17 @@ export default function Page() {
           />
         </div>
 
-        <div className="flex flex-col w-full sm:w-1/4">
+        <div className="flex flex-col w-full sm:w-1/4 relative">
           <button onClick={handleSearch} className="submitbutton">Submit <ArrowRightIcon className="w-6 md:w-7" /></button>
+          {loading == 'Invalid Ticker :(' ?
+          <p className="absolute left-2 top-full mt-1 text-sm text-red-500 font-bold">
+          {loading} 
+          </p>
+          :
+          <p className="absolute left-2 top-full mt-1 text-sm text-green-500 font-bold">
+          {loading} 
+          </p>
+          }
         </div>
 
         <div className="flex flex-col w-full sm:w-1/4 relative">
@@ -125,12 +139,11 @@ export default function Page() {
           <select value={timeRange} onChange={(e) => setTimeRange(e.target.value)} className="inputfield">
             {timeRanges.map((range) => (<option key={range} value={range}>{range.toUpperCase()}</option>))}
           </select>
-          {errors.timeRange && (<p className="absolute left-2 top-full mt-1 text-sm text-red-500">Please select a time range</p>)}
         </div>
       </div>
 
       {/* Search Tags */}
-      <div className="w-full mt-4 flex flex-wrap gap-2 items-start">
+      <div className="w-full mt-7 flex flex-wrap gap-2 items-start">
         {searchHistory.map((term, index) => (
           <div key={index} className="searchtag">
             {term}
@@ -142,7 +155,7 @@ export default function Page() {
       </div>
 
       {/* Line Chart */}
-      <div className="w-full h-[550px] textbox justify-center items-center mt-6"> {/* Increased height */}
+      <div className="w-full h-[550px] textbox justify-center items-center mt-7"> {/* Increased height */}
       <ResponsiveContainer width="100%" height={500}>
           {Object.keys(stockData).length > 0 ? (
         <LineChart
@@ -154,7 +167,7 @@ export default function Page() {
           <XAxis
             dataKey="date"
             tickFormatter={(tick) =>
-              typeof tick === "string" ? tick.slice(5, 10) : tick
+              typeof tick === "string" ? (timeRange == '1d' ? tick.slice(11,16) : tick.slice(5, 10)) : tick
             }
             angle={-45}
             textAnchor="end"
@@ -169,11 +182,24 @@ export default function Page() {
           />
 
           <Tooltip
-            formatter={(value) =>
-              typeof value === 'number' ? value.toFixed(2) : value
-            }
+            content={({ active, payload, label }) => {
+              if (active && payload && payload.length) {
+                return (
+                  <div className="bg-gray-800 text-white p-2 rounded shadow">
+                    {
+                      timeRange=='1d' ? (<p className="font-bold">Time: {label.slice(11,16)}</p>):(<p className="font-bold">Date: {label.slice(0, 10)}</p>)
+                    }
+                    {payload.map((entry, index) => (
+                      <p key={index} style={{ color: entry.color }}>
+                        {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(2) : entry.value}
+                      </p>
+                    ))}
+                  </div>
+                );
+              }
+              return null;
+            }}
           />
-
           <CartesianGrid strokeDasharray="3 3" />
 
           {Object.keys(stockData).map((ticker, index) => (

@@ -5,12 +5,13 @@ import { ArrowRightIcon, MagnifyingGlassIcon, PencilIcon } from "@heroicons/reac
 import { getBrief } from '@/app/api/summary'
 import ReactMarkdown from 'react-markdown';
 import CustomMarkdown from '@/app/components/markdown'
+import checkTickerValidity from '@/app/api/visualize';
 
 export default function Form() {
   const [ticker, setTicker] = useState("");
   const [description, setDescription] = useState("");
   const [results, setResults] = useState("Try searching something!");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [issue, setIssue] = useState('');
 
   
   const handleTickerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,24 +23,24 @@ export default function Form() {
   };
 
   const handleSubmit = async () => {
-    console.log("Form submitted with:", { ticker, description });
+    checkTickerValidity(ticker).then(async valid => {  
+      setIssue('');
+      setResults("Loading...");
 
-    setIsLoading(true);
-    setResults("Loading...");
+      setTicker("");
+      setDescription("");
 
-    setTicker("");
-    setDescription("");
-
-    try {
-      const result = await getBrief(ticker, description);
-      // {console.log(results)}
-      setResults(result !== null ? result : "Something went wrong :(");
-    } catch (error) {
-      console.error("Error fetching brief:", error);
-      setResults("Error fetching brief:" + error);
-    } finally {
-      setIsLoading(false);
-    }
+      try {
+        const result = await getBrief(ticker, description);
+        // {console.log(results)}
+        setResults(result !== null ? result : "Something went wrong :(");
+      } catch (error) {
+        console.error("Error fetching brief:", error);
+        setResults("Error fetching brief:" + error);
+      } 
+    }).catch(error => {
+      setIssue('Invalid Ticker :(');
+    });
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -84,7 +85,7 @@ export default function Form() {
         </div>
 
         {/* Submit */}
-        <div className="flex flex-col w-full sm:w-1/4">
+        <div className="flex flex-col w-full sm:w-1/4 relative">
           <button 
             onClick={handleSubmit}
             className="submitbutton"
@@ -92,12 +93,15 @@ export default function Form() {
             Submit
             <ArrowRightIcon className="w-6 md:w-7" />
           </button>
+          <p className="absolute left-2 top-full mt-1 text-sm text-red-500 font-bold">
+          {issue} 
+          </p>
         </div>
         
       </div>
 
       {/* Results Section */}
-      <div className="w-full mt-6">
+      <div className="w-full mt-7">
         <div className="w-full h-[600px] sm:h-[600px] textbox">
           <CustomMarkdown content={results}/>
         </div>

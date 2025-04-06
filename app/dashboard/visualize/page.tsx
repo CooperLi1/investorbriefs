@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRightIcon, MagnifyingGlassIcon, ChartBarIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area, ScatterChart, Scatter, PieChart, Pie, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, CartesianGrid } from 'recharts';
 import visualData from '@/app/api/visualize'
+import checkTickerValidity from '@/app/api/visualize';
 
 type PriceVolumeData = { price: number; volume: number }[];
 
@@ -33,6 +34,7 @@ export default function StockPage() {
   const [timeRange, setTimeRange] = useState("1d");
   const [errors, setErrors] = useState({ chartType: false, timeRange: false });
   const [loading, setLoading] = useState('Enter Data...')
+  const [issue, setIssue] = useState('');
 
   async function fetchData() {
     setLoading('Loading...')
@@ -46,6 +48,7 @@ export default function StockPage() {
   }
 
   const handleSubmit = async() => {
+    checkTickerValidity(ticker).then(async valid => {  
       if(chartType != null){
       let newErrors = { chartType: false, timeRange: false };
 
@@ -60,7 +63,10 @@ export default function StockPage() {
         }
       }
       fetchData()
-    }
+      }
+    }).catch(error => {
+        setIssue('Invalid Ticker :(');
+    });
   };
 
   const stockData = sampleData[timeRange as keyof typeof sampleData];
@@ -73,8 +79,11 @@ export default function StockPage() {
           <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-500" />
           <input type="text" value={ticker} onChange={(e) => setTicker(e.target.value)} className="inputfield" placeholder="Enter ticker..." />
         </div>
-        <div className="flex flex-col w-full sm:w-1/4">
+        <div className="flex flex-col w-full sm:w-1/4 relative">
           <button onClick={handleSubmit} className="submitbutton">Submit <ArrowRightIcon className="w-6 md:w-7" /></button>
+          <p className="absolute left-2 top-full mt-1 text-sm text-red-500 font-bold">
+          {issue} 
+          </p>
         </div>
         <div className="flex flex-col w-full sm:w-1/4 relative">
           <ChartBarIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-500" />
@@ -97,7 +106,8 @@ export default function StockPage() {
         </div>
       </div>
       {/* Chart Display */}
-  <div className="w-full flex justify-center mt-6">
+
+  <div className="w-full flex justify-center mt-7">
     <div className="w-full h-[600px] textbox"> {/* Increased height */}
       <h2 className="text-3xl font-bold text-center mb-4">
         {loading=='done' ? (Object.values(sampleData).every((arr: PriceVolumeData) => arr.length === 0) ? 'Something Went Wrong' : (selectedStock + ' ' + timeRange.toUpperCase())) : loading}
@@ -115,9 +125,28 @@ export default function StockPage() {
                 domain={['dataMin', 'dataMax']} 
                 tickFormatter={(value) => Number(value).toFixed(1)}
               />
-              <Tooltip formatter={(value) => Number(value).toFixed(1)} />
+              <Tooltip
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="bg-gray-800 text-white p-2 rounded shadow">
+                        {
+                          timeRange=='1d' ? (<p className="font-bold">Time: {label.slice(11,16)}</p>):(<p className="font-bold">Date: {label.slice(0, 10)}</p>)
+                        }
+                        {payload.map((entry, index) => (
+                          <p key={index} style={{ color: entry.color }}>
+                            {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(2) : entry.value}
+                          </p>
+                        ))}
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
               <CartesianGrid strokeDasharray="3 3" />
-              <Line type="monotone" dataKey="price" stroke="#8884d8" strokeWidth={2} activeDot={{ r: 6 }} />
+              <Line type="monotone" dataKey="price" stroke="#8884d8" strokeWidth={2} activeDot={{ r: 6 }} dot={false}
+              />
             </LineChart>
           ) : chartType === "bar" ? (
             <BarChart data={stockData} margin={{ top: 20, right: 30, left: 20, bottom: 30 }}>
@@ -129,7 +158,25 @@ export default function StockPage() {
                 domain={[0, 'auto']} 
                 tickFormatter={(value) => value.toExponential(1)}  // Convert to scientific notation with 1 decimal place
                 />
-              <Tooltip formatter={(value) => Number(value).toFixed(1)} />
+              <Tooltip
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="bg-gray-800 text-white p-2 rounded shadow">
+                        {
+                          timeRange=='1d' ? (<p className="font-bold">Time: {label.slice(11,16)}</p>):(<p className="font-bold">Date: {label.slice(0, 10)}</p>)
+                        }
+                        {payload.map((entry, index) => (
+                          <p key={index} style={{ color: entry.color }}>
+                            {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(2) : entry.value}
+                          </p>
+                        ))}
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
               <CartesianGrid strokeDasharray="3 3" />
               <Bar dataKey="volume" fill="#82ca9d" barSize={30} />
             </BarChart>
@@ -143,7 +190,25 @@ export default function StockPage() {
                 domain={['dataMin', 'dataMax']} 
                 tickFormatter={(value) => Number(value).toFixed(1)} 
               />
-              <Tooltip formatter={(value) => Number(value).toFixed(1)} />
+              <Tooltip
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="bg-gray-800 text-white p-2 rounded shadow">
+                        {
+                          timeRange=='1d' ? (<p className="font-bold">Time: {label.slice(11,16)}</p>):(<p className="font-bold">Date: {label.slice(0, 10)}</p>)
+                        }
+                        {payload.map((entry, index) => (
+                          <p key={index} style={{ color: entry.color }}>
+                            {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(2) : entry.value}
+                          </p>
+                        ))}
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
               <CartesianGrid strokeDasharray="3 3" />
               <Area dataKey="price" fill="#8884d8" stroke="#8884d8" strokeWidth={2} />
             </AreaChart>

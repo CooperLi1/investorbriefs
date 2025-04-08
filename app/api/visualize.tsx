@@ -32,10 +32,25 @@ export default async function visualData(ticker: string): Promise<Record<string,
 
     const intradayData = intradayResponse.data["Time Series (5min)"];
     if (!intradayData) throw new Error("No intraday data received");
+    sampleData["1d"] = Object.entries(intradayData).map(([timestamp, values]) => {
+    if (typeof values !== "object" || values === null) {
+      throw new Error(`Unexpected data format for timestamp: ${timestamp}`);
+    }
+  
+    const typedValues = values as Record<string, string>;
+  
+    return {
+      date: timestamp,
+      price: parseFloat(typedValues["4. close"]),
+      volume: parseInt(typedValues["5. volume"], 10),
+    };
+  });
+
   }catch (error){
     console.error("Error fetching stock data:", error);
   }
     
+  
   const results = await yahooFinance.search('AAPL');
   // console.log(results)
   const oneday: "1m" | "2m" | "5m" | "15m" | "30m" | "60m" | "90m" | "1h" | "1d" | "5d" | "1wk" | "1mo" | "3mo" = "1d";

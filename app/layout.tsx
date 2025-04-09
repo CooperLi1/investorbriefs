@@ -14,9 +14,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // Define dynamic titles based on the current route
   const getPageTitle = (path: string) => {
     const titles: { [key: string]: string } = {
-      '/dashboard': 'Search | Debatify',
+      '/dashboard': 'Summary | InvestorBriefs',
+      '/dashboard/visualize': 'Visualize | InvestorBriefs',
+      '/dashboard/compare': 'Compare | InvestorBriefs',
+      '/dashboard/chat': 'Chat | InvestorBriefs'
     }
-    return titles[path] || 'Debatify - Search for cut cards!'
+    return titles[path] || 'InvestorBriefs - AI-Powered Stock Summaries'
   }
 
   const [title, setTitle] = useState(getPageTitle(pathname))
@@ -59,7 +62,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Head>
             {/* Dynamic Title */}
             <title>{title}</title>
-            <meta name="description" content="Search for debate cut cards!" />
+            <meta name="description" content="Get real-time AI-generated stock insights to make smarter investments." />
+
+            {/* Favicon */}
+            <link rel="icon" href="/favicon.ico" />
+            <link rel="shortcut icon" href="/favicon-32x32.png" />
+            <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+            {/* Open Graph Metadata */}
+            <meta property="og:title" content={title} />
+            <meta property="og:description" content="Get real-time AI-generated stock insights to make smarter investments." />
+            <meta property="og:url" content="https://investorbriefs.vercel.app" />
+            <meta property="og:site_name" content="InvestorBriefs" />
+            <meta property="og:image" content="/og-image.png" />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+            <meta property="og:type" content="website" />
+
+            {/* Twitter Metadata */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content={title} />
+            <meta name="twitter:description" content="Get real-time AI-generated stock insights to make smarter investments." />
+            <meta name="twitter:image" content="/og-image.png" />
           </Head>
       <body className={`${mont.className } antialiased bg-gray-50 dark:bg-gray-900`}>
         <ClerkProvider>

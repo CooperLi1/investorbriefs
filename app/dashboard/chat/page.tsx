@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { MagnifyingGlassIcon, XMarkIcon, ArrowRightIcon, ClockIcon, PencilIcon } from "@heroicons/react/24/outline";
 import { getStockInfo } from '@/app/api/summary';
 import { superGPT, getSentiment } from '@/app/api/summary';
-import checkTickerValidity from '@/app/api/visualize';
+import { checkTickerValidity } from '@/app/api/visualize';
 import { useEffect, useRef } from 'react';
 
 const dataTypes = ["Overview", "News"];

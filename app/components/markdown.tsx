@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
+import { getSafeMarkdownHref } from '@/app/lib/validation';
 
 const CustomMarkdown = ({ content }: { content: string }) => {
   return (
@@ -8,17 +9,22 @@ const CustomMarkdown = ({ content }: { content: string }) => {
       children={content}
       components={{
         a: ({ node, ...props }: any) => {
-          const isExternal = /^(https?:|mailto:)/.test(props.href);
+          const safeHref = getSafeMarkdownHref(props.href);
 
-          return isExternal ? (
+          if (!safeHref) {
+            return <span className="font-bold">{props.children}</span>;
+          }
+
+          return safeHref.isExternal ? (
             <a
               {...props}
+              href={safeHref.href}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 dark:text-blue-400 underline font-bold"
             />
           ) : (
-            <Link to={props.href} className="text-blue-600 dark:text-blue-400 underline font-bold">
+            <Link href={safeHref.href} className="text-blue-600 dark:text-blue-400 underline font-bold">
               {props.children}
             </Link>
           );

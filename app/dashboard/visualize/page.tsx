@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { ArrowRightIcon, MagnifyingGlassIcon, ChartBarIcon, ClockIcon } from "@heroicons/react/24/outline";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area, ScatterChart, Scatter, PieChart, Pie, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, CartesianGrid } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area, CartesianGrid } from 'recharts';
 import visualData from '@/app/api/visualize'
-import checkTickerValidity from '@/app/api/visualize';
+import { checkTickerValidity } from '@/app/api/visualize';
 
 type PriceVolumeData = { price: number; volume: number }[];
 
@@ -222,4 +222,3 @@ export default function StockPage() {
     </div>
   );
 }
-

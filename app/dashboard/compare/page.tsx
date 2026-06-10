@@ -1,12 +1,11 @@
 'use client';
 import { useState } from 'react';
 import { MagnifyingGlassIcon, XMarkIcon, ArrowRightIcon, ClockIcon, PencilIcon } from "@heroicons/react/24/outline";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
 import visualData from '@/app/api/visualize';
 import {getStockInfo} from '@/app/api/summary'
 import {compareGPT} from '@/app/api/summary'
-import checkTickerValidity from '@/app/api/visualize';
-import { Legend } from 'recharts';
+import { checkTickerValidity } from '@/app/api/visualize';
 import CustomMarkdown from '@/app/components/markdown'
 
 

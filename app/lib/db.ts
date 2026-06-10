@@ -1,7 +1,18 @@
-"use server"; // Ensure this is a server module
-
 import postgres from 'postgres';
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+let sql: ReturnType<typeof postgres> | null = null;
 
-export default sql;
+export function getSql() {
+  if (!sql) {
+    const postgresUrl = process.env.POSTGRES_URL;
+    if (!postgresUrl) {
+      throw new Error('Missing required server configuration: POSTGRES_URL');
+    }
+
+    sql = postgres(postgresUrl, { ssl: 'require' });
+  }
+
+  return sql;
+}
+
+export default getSql;
